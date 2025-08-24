@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Diabetes Prediction</title>
+    <script>
+      async function getPrediction(event) {
+        event.preventDefault();
+
+        // Collect form values
+        let features = [];
+        for (let i = 1; i <= 8; i++) {
+          features.push(parseFloat(document.getElementById("f" + i).value));
+        }
+
+        // Send POST request to Flask API
+        const response = await fetch("/predict", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ features: features }),
+        });
+
+        const result = await response.json();
+        document.getElementById("output").innerText =
+          result.prediction === 1
+            ? "⚠️ High risk of Diabetes"
+            : "✅ Low risk of Diabetes";
+      }
+    </script>
+  </head>
+  <body
+    style="font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto"
+  >
+    <h2>Diabetes Prediction Form</h2>
+    <form onsubmit="getPrediction(event)">
+      <label
+        >Pregnancies: <input type="number" step="any" id="f1" required /></label
+      ><br /><br />
+      <label>Glucose: <input type="number" step="any" id="f2" required /></label
+      ><br /><br />
+      <label
+        >Blood Pressure:
+        <input type="number" step="any" id="f3" required /></label
+      ><br /><br />
+      <label
+        >Skin Thickness:
+        <input type="number" step="any" id="f4" required /></label
+      ><br /><br />
+      <label>Insulin: <input type="number" step="any" id="f5" required /></label
+      ><br /><br />
+      <label>BMI: <input type="number" step="any" id="f6" required /></label
+      ><br /><br />
+      <label
+        >Diabetes Pedigree Function:
+        <input type="number" step="any" id="f7" required /></label
+      ><br /><br />
+      <label>Age: <input type="number" step="any" id="f8" required /></label
+      ><br /><br />
+
+      <button type="submit">Predict</button>
+    </form>
+
+    <h3 id="output" style="margin-top: 20px; color: darkblue"></h3>
+  </body>
+</html>
